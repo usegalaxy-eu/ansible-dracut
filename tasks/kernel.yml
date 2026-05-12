@@ -27,7 +27,7 @@
 
 - name: Set the running kernel paths
   set_fact:
-    builder_kernel_path: "{{ ansible_cmdline.BOOT_IMAGE | regex_replace('^.*(/boot/.*)+$', '\\1') }}"
+    builder_kernel_path: "{{ (ansible_cmdline.BOOT_IMAGE | regex_replace('^\\(.*?\\)', '') | regex_replace('^(/vmlinuz.*)', '/boot\\1')) | regex_replace('^.*(/boot/.*)+$', '\\1') }}"
     builder_kernel_version: "{{ ansible_kernel }}"
     builder_kernel_source: "/lib/modules/{{ ansible_kernel }}/build"
   when: not custom_kernel_file.stat.exists
